@@ -5,14 +5,20 @@ class Usuarios:
     def registrar_cuenta(self, cantidad):
         for _ in range(cantidad):
             id_c = input("ID Cuenta: ")
+            nombre = input("Nombre del usuario: ")
 
             # PRE-CONDICION CREAR CUENTAS: No se puede crear una cuenta duplicada
             for cuenta in self.cuentas:
                 if cuenta["id"] == id_c:
+                    print("Pre-condicion: No debe haber un registro previo con ese ID")
                     print("Error: Ya existe una cuenta con ese ID.")
                     break
+
+                if cuenta["nombre"] == nombre:
+                    print("Pre-condicion: No debe haber un registro previo con ese nombre")
+                    print("Error: Ya existe una cuenta con ese Nombre.")
+                    break
             else:
-                nombre = input("Nombre del usuario: ")
                 tipo = input("Tipo de cuenta: ")
                 saldo = float(input("Saldo inicial: "))
                 fecha = input("Fecha apertura: ")
@@ -28,14 +34,16 @@ class Usuarios:
                 }
 
                 self.cuentas.append(usuario)
+                print("Post-condicion: El usuario debe aparecer en las nuevas consultas")
                 print("Cuenta creada con exito.")
 
-    # POST-CONDICION CREAR CUENTAS: La cuenta debe aparecer una vez creada
     def consultar(self):
+        print("Pre-condicion: El titular debe tener una cuenta activa")
         if not self.cuentas:
             print("No hay cuentas registradas.")
             return
 
+        print("Post-condicion: La informacion debe ser la registradas")
         for i, cuenta in enumerate(self.cuentas, start=1):
             print(
                 f"{i} - ID: {cuenta['id']}, "
@@ -45,8 +53,6 @@ class Usuarios:
                 f"Estado: {cuenta['estado']}, "
                 f"Fecha: {cuenta['fecha']}"
             )
-#Pre: La cuenta debe existir para poder consultarla
-#Post: La informacion debe ser coherente
 class Banco:
     def __init__(self):
         self.usuarios = Usuarios()
@@ -57,31 +63,32 @@ class Banco:
         self.usuarios.registrar_cuenta(cantidad)
 
     def consultar_saldo(self):
+        print("Pre: La cuenta debe existir para poder consultarla")
         id_c = input("Ingrese el ID de la cuenta: ")
 
         for cuenta in self.usuarios.cuentas:
             if cuenta["id"] == id_c:
+                print("Post: La informacion debe ser la registrada")
                 print(f"Saldo actual: {cuenta['saldo']}")
                 return
 
         print("Cuenta no encontrada.")
 
-#La cuenta debe existir para poder realizar deposito
-#El nuevo monto debe aparecer actualizado
     def deposito(self):
         id_c = input("ID de la cuenta: ")
+        print("Pre-condicion: El usuario debe digitar el monto para poder realizar el deposito, y confirmar sus datos")
         monto = float(input("Monto a depositar: "))
 
         for cuenta in self.usuarios.cuentas:
             if cuenta["id"] == id_c:
                 cuenta["saldo"] += monto
                 print("Deposito realizado con exito.")
+                print("El saldo disponible debe mostrarse con los nuevos datos")
                 return
         print("Cuenta no encontrada.")
 
-#El monto de retiro no debe ser mayor al saldo actual
-#El dinero debe aparecer actualizado
     def retiro(self):
+        print("El ID cuenta y el nombre titular deben ser correctos, \nasi como el monto a retirar no debe exceder el monto disponible")
         id_c = input("ID de la cuenta: ")
         monto = float(input("Monto a retirar: "))
 
@@ -90,19 +97,20 @@ class Banco:
                 if cuenta["saldo"] >= monto:
                     cuenta["saldo"] -= monto
                     print("Retiro realizado con éxito.")
+                    print("Post-condicion: En consultas posteriores debe aparecer el nuevo saldo disponible")
                 else:
                     print("Fondos insuficientes.")
                 return
         print("Cuenta no encontrada.")
 
-#La cuenta debe existir para ser consultada
-#La cuenta debe aparecer con el nuevo estado
     def cancelar_cuenta(self):
+        print("Pre-condicion: La cuenta debe existir para poder cancelarla")
         id_c = input("ID de la cuenta a cancelar: ")
         for cuenta in self.usuarios.cuentas:
             if cuenta["id"] == id_c:
                 cuenta["estado"] = "Cancelada"
                 print("Cuenta cancelada.")
+                print("Post-condicion: La cuenta debe aparecer inactiva")
                 return
         print("Cuenta no encontrada.")
 
