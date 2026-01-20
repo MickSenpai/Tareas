@@ -9,7 +9,7 @@ class Usuarios:
             # PRE-CONDICION CREAR CUENTAS: No se puede crear una cuenta duplicada
             for cuenta in self.cuentas:
                 if cuenta["id"] == id_c:
-                    print("❌ Error: Ya existe una cuenta con ese ID.")
+                    print("Error: Ya existe una cuenta con ese ID.")
                     break
             else:
                 nombre = input("Nombre del usuario: ")
@@ -28,7 +28,7 @@ class Usuarios:
                 }
 
                 self.cuentas.append(usuario)
-                print("Cuenta creada con éxito.")
+                print("Cuenta creada con exito.")
 
     # POST-CONDICION CREAR CUENTAS: La cuenta debe aparecer una vez creada
     def consultar(self):
@@ -45,8 +45,8 @@ class Usuarios:
                 f"Estado: {cuenta['estado']}, "
                 f"Fecha: {cuenta['fecha']}"
             )
-
-
+#Pre: La cuenta debe existir para poder consultarla
+#Post: La informacion debe ser coherente
 class Banco:
     def __init__(self):
         self.usuarios = Usuarios()
@@ -66,7 +66,8 @@ class Banco:
 
         print("Cuenta no encontrada.")
 
-
+#La cuenta debe existir para poder realizar deposito
+#El nuevo monto debe aparecer actualizado
     def deposito(self):
         id_c = input("ID de la cuenta: ")
         monto = float(input("Monto a depositar: "))
@@ -78,6 +79,8 @@ class Banco:
                 return
         print("Cuenta no encontrada.")
 
+#El monto de retiro no debe ser mayor al saldo actual
+#El dinero debe aparecer actualizado
     def retiro(self):
         id_c = input("ID de la cuenta: ")
         monto = float(input("Monto a retirar: "))
@@ -92,6 +95,8 @@ class Banco:
                 return
         print("Cuenta no encontrada.")
 
+#La cuenta debe existir para ser consultada
+#La cuenta debe aparecer con el nuevo estado
     def cancelar_cuenta(self):
         id_c = input("ID de la cuenta a cancelar: ")
         for cuenta in self.usuarios.cuentas:
