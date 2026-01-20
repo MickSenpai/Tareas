@@ -5,23 +5,32 @@ class Usuarios:
     def registrar_cuenta(self, cantidad):
         for _ in range(cantidad):
             id_c = input("ID Cuenta: ")
-            nombre = input("Nombre del usuario: ")
-            tipo = input("Tipo de cuenta: ")
-            saldo = float(input("Saldo inicial: "))
-            fecha = input("Fecha apertura: ")
-            estado = input("Estado: ")
 
-            usuario = {
-                "id": id_c,
-                "nombre": nombre,
-                "tipo": tipo,
-                "saldo": saldo,
-                "fecha": fecha,
-                "estado": estado
-            }
+            # PRE-CONDICION CREAR CUENTAS: No se puede crear una cuenta duplicada
+            for cuenta in self.cuentas:
+                if cuenta["id"] == id_c:
+                    print("❌ Error: Ya existe una cuenta con ese ID.")
+                    break
+            else:
+                nombre = input("Nombre del usuario: ")
+                tipo = input("Tipo de cuenta: ")
+                saldo = float(input("Saldo inicial: "))
+                fecha = input("Fecha apertura: ")
+                estado = input("Estado: ")
 
-            self.cuentas.append(usuario)
+                usuario = {
+                    "id": id_c,
+                    "nombre": nombre,
+                    "tipo": tipo,
+                    "saldo": saldo,
+                    "fecha": fecha,
+                    "estado": estado
+                }
 
+                self.cuentas.append(usuario)
+                print("Cuenta creada con éxito.")
+
+    # POST-CONDICION CREAR CUENTAS: La cuenta debe aparecer una vez creada
     def consultar(self):
         if not self.cuentas:
             print("No hay cuentas registradas.")
@@ -65,7 +74,7 @@ class Banco:
         for cuenta in self.usuarios.cuentas:
             if cuenta["id"] == id_c:
                 cuenta["saldo"] += monto
-                print("Depósito realizado con éxito.")
+                print("Deposito realizado con exito.")
                 return
         print("Cuenta no encontrada.")
 
